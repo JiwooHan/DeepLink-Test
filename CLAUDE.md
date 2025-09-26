@@ -23,7 +23,7 @@ npm i
 
 ## Architecture Overview
 
-This is a React + TypeScript mobile deep link testing application built with Vite. The app validates and tests deep links (URI schemes, universal links, and app links).
+This is a React + TypeScript DeepLink Test application built with Vite. The app validates and tests deep links (URI schemes, universal links, and app links).
 
 ### Tech Stack
 - **Frontend**: React 18 + TypeScript
