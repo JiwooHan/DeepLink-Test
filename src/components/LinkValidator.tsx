@@ -15,7 +15,7 @@ export function validateLink(link: string): LinkValidation {
   if (!link.trim()) {
     return {
       type: 'empty',
-      message: '링크를 입력해주세요',
+      message: 'Please enter a link',
       isValid: false
     };
   }
@@ -32,7 +32,7 @@ export function validateLink(link: string): LinkValidation {
   if (uriSchemePattern.test(link) && !link.startsWith('http')) {
     return {
       type: 'uri-scheme',
-      message: 'URI 스킴 형태의 딥링크입니다',
+      message: 'URI scheme deep link format',
       isValid: true
     };
   }
@@ -40,14 +40,14 @@ export function validateLink(link: string): LinkValidation {
   if (universalLinkPattern.test(link)) {
     return {
       type: 'universal-link',
-      message: '유니버설 링크/앱 링크 형태입니다',
+      message: 'Universal link/App link format',
       isValid: true
     };
   }
 
   return {
     type: 'invalid',
-    message: '유효하지 않은 링크 형식입니다',
+    message: 'Invalid link format',
     isValid: false
   };
 }
@@ -80,7 +80,11 @@ export function LinkValidator({ link }: LinkValidatorProps) {
   return (
     <div className="flex items-center gap-2 min-h-[32px]">
       {link.trim() && (
-        <Badge variant={getVariant()} className="flex items-center gap-1 text-xs">
+        <Badge
+          variant={getVariant()}
+          className="flex items-center gap-1 text-xs"
+          style={validation.type === 'invalid' ? { backgroundColor: '#F08787', borderColor: '#F08787', color: 'white' } : undefined}
+        >
           {getIcon()}
           {validation.message}
         </Badge>

@@ -10,7 +10,7 @@ interface GeneratedLinkProps {
 export function GeneratedLink({ link }: GeneratedLinkProps) {
   const validation = validateLink(link);
 
-  if (!link.trim() || !validation.isValid) {
+  if (!link.trim()) {
     return null;
   }
 
@@ -23,7 +23,7 @@ export function GeneratedLink({ link }: GeneratedLinkProps) {
     <Card className="p-4 animate-in fade-in-50 slide-in-from-top-2 duration-300">
       <div className="space-y-3">
         <h3 className="text-sm font-medium text-muted-foreground">
-          생성된 테스트 링크
+          Generated Test Link
         </h3>
         
         <div className="p-3 bg-muted/50 rounded-lg border">
@@ -32,13 +32,14 @@ export function GeneratedLink({ link }: GeneratedLinkProps) {
           </code>
         </div>
 
-        <Button 
+        <Button
           onClick={handleLinkClick}
           className="w-full"
           size="lg"
+          style={{ backgroundColor: '#9747ff', borderColor: '#9747ff' }}
         >
           <ExternalLink className="h-4 w-4 mr-2" />
-          링크 테스트하기
+          Test Link
         </Button>
       </div>
     </Card>

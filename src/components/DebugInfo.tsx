@@ -19,12 +19,9 @@ export function DebugInfo({ link, timestamp }: DebugInfoProps) {
     inputLink: link,
     userAgent: navigator.userAgent,
     platform: navigator.platform,
-    language: navigator.language,
     cookieEnabled: navigator.cookieEnabled,
     onlineStatus: navigator.onLine,
-    screenResolution: `${screen.width} x ${screen.height}`,
-    viewport: `${window.innerWidth} x ${window.innerHeight}`,
-    referrer: document.referrer || '직접 접근',
+    referrer: document.referrer || 'Direct access',
     currentUrl: window.location.href
   };
 
@@ -34,13 +31,13 @@ export function DebugInfo({ link, timestamp }: DebugInfoProps) {
     try {
       await navigator.clipboard.writeText(debugText);
       setCopied(true);
-      toast.success("디버깅 정보가 클립보드에 복사되었습니다!", {
+      toast.success("Debug information copied to clipboard!", {
         duration: 2000,
       });
       
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      toast.error("복사에 실패했습니다. 다시 시도해주세요.");
+      toast.error("Failed to copy. Please try again.");
     }
   };
 
@@ -52,7 +49,7 @@ export function DebugInfo({ link, timestamp }: DebugInfoProps) {
             variant="ghost"
             className="w-full justify-between p-4 h-auto rounded-none hover:bg-muted/50"
           >
-            <span>디버깅 정보</span>
+            <span>Debug Information</span>
             <ChevronDown 
               className={`h-4 w-4 transition-transform duration-200 ${
                 isOpen ? 'rotate-180' : ''
@@ -66,46 +63,26 @@ export function DebugInfo({ link, timestamp }: DebugInfoProps) {
             <div className="grid gap-3 text-sm">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <span className="font-medium text-muted-foreground">타임스탬프:</span>
+                  <span className="font-medium text-muted-foreground">Timestamp:</span>
                   <p className="mt-1 font-mono text-xs bg-muted/50 p-2 rounded">
                     {debugData.timestamp}
                   </p>
                 </div>
                 
                 <div>
-                  <span className="font-medium text-muted-foreground">입력된 링크:</span>
+                  <span className="font-medium text-muted-foreground">Input Link:</span>
                   <p className="mt-1 font-mono text-xs bg-muted/50 p-2 rounded break-all">
-                    {debugData.inputLink || '없음'}
+                    {debugData.inputLink || 'None'}
                   </p>
                 </div>
                 
                 <div>
-                  <span className="font-medium text-muted-foreground">플랫폼:</span>
+                  <span className="font-medium text-muted-foreground">Platform:</span>
                   <p className="mt-1 font-mono text-xs bg-muted/50 p-2 rounded">
                     {debugData.platform}
                   </p>
                 </div>
                 
-                <div>
-                  <span className="font-medium text-muted-foreground">언어:</span>
-                  <p className="mt-1 font-mono text-xs bg-muted/50 p-2 rounded">
-                    {debugData.language}
-                  </p>
-                </div>
-                
-                <div>
-                  <span className="font-medium text-muted-foreground">화면 해상도:</span>
-                  <p className="mt-1 font-mono text-xs bg-muted/50 p-2 rounded">
-                    {debugData.screenResolution}
-                  </p>
-                </div>
-                
-                <div>
-                  <span className="font-medium text-muted-foreground">뷰포트:</span>
-                  <p className="mt-1 font-mono text-xs bg-muted/50 p-2 rounded">
-                    {debugData.viewport}
-                  </p>
-                </div>
               </div>
               
               <div>
@@ -116,7 +93,7 @@ export function DebugInfo({ link, timestamp }: DebugInfoProps) {
               </div>
               
               <div>
-                <span className="font-medium text-muted-foreground">현재 URL:</span>
+                <span className="font-medium text-muted-foreground">Current URL:</span>
                 <p className="mt-1 font-mono text-xs bg-muted/50 p-2 rounded break-all">
                   {debugData.currentUrl}
                 </p>
@@ -132,12 +109,12 @@ export function DebugInfo({ link, timestamp }: DebugInfoProps) {
               {copied ? (
                 <>
                   <Check className="h-4 w-4 mr-2" />
-                  복사됨
+                  Copied
                 </>
               ) : (
                 <>
                   <Copy className="h-4 w-4 mr-2" />
-                  디버깅 정보 복사
+                  Copy Debug Information
                 </>
               )}
             </Button>
