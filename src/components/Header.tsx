@@ -25,7 +25,7 @@ export function Header() {
         </div>
         <div className="text-center mt-2">
           <p className="text-xs text-muted-foreground">
-            Test your deep links and universal links easily
+            Test your deep links and universal links easily • v0.1.0
           </p>
         </div>
       </div>
