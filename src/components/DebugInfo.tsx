@@ -10,6 +10,27 @@ interface DebugInfoProps {
   timestamp: string;
 }
 
+// 플랫폼 감지 함수
+function detectPlatform(): string {
+  const userAgent = navigator.userAgent.toLowerCase();
+
+  if (/iphone|ipod/.test(userAgent)) {
+    return 'iPhone';
+  } else if (/ipad/.test(userAgent)) {
+    return 'iPad';
+  } else if (/android/.test(userAgent)) {
+    return 'Android';
+  } else if (/macintosh|mac os x/.test(userAgent)) {
+    return 'macOS';
+  } else if (/windows/.test(userAgent)) {
+    return 'Windows';
+  } else if (/linux/.test(userAgent)) {
+    return 'Linux';
+  } else {
+    return navigator.platform || 'Unknown';
+  }
+}
+
 export function DebugInfo({ link, timestamp }: DebugInfoProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -18,7 +39,7 @@ export function DebugInfo({ link, timestamp }: DebugInfoProps) {
     timestamp,
     inputLink: link,
     userAgent: navigator.userAgent,
-    platform: navigator.platform,
+    platform: detectPlatform(),
     cookieEnabled: navigator.cookieEnabled,
     onlineStatus: navigator.onLine,
     referrer: document.referrer || 'Direct access',
