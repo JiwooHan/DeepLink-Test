@@ -12,7 +12,9 @@ export interface LinkValidation {
 }
 
 export function validateLink(link: string): LinkValidation {
-  if (!link.trim()) {
+  const trimmedLink = link.trim();
+
+  if (!trimmedLink) {
     return {
       type: 'empty',
       message: 'Please enter a link',
@@ -29,7 +31,9 @@ export function validateLink(link: string): LinkValidation {
   // App Link 패턴 (https://domain.com/path with specific app link indicators)
   const appLinkPattern = /^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\/.*$/;
 
-  if (uriSchemePattern.test(link) && !link.startsWith('http')) {
+  const lowercasedLink = trimmedLink.toLowerCase();
+
+  if (uriSchemePattern.test(trimmedLink) && !lowercasedLink.startsWith('http')) {
     return {
       type: 'uri-scheme',
       message: 'URI scheme deep link format',
@@ -37,7 +41,7 @@ export function validateLink(link: string): LinkValidation {
     };
   }
 
-  if (universalLinkPattern.test(link)) {
+  if (universalLinkPattern.test(trimmedLink)) {
     return {
       type: 'universal-link',
       message: 'Universal link/App link format',

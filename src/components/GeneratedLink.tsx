@@ -2,63 +2,97 @@ import { ExternalLink, AlertTriangle } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { validateLink } from "./LinkValidator";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface GeneratedLinkProps {
   link: string;
 }
 
 export function GeneratedLink({ link }: GeneratedLinkProps) {
-  const validation = validateLink(link);
+  const trimmedLink = link.trim();
+  const validation = validateLink(trimmedLink);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const timeoutRef = useRef<number | null>(null);
+  const listenersRef = useRef<{
+    handleVisibilityChange: () => void;
+    handleWindowBlur: () => void;
+  } | null>(null);
 
-  if (!link.trim()) {
+  const cleanupAttempt = () => {
+    if (timeoutRef.current !== null) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    if (listenersRef.current) {
+      const { handleVisibilityChange, handleWindowBlur } = listenersRef.current;
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleWindowBlur);
+      listenersRef.current = null;
+    }
+  };
+
+  const markSuccess = () => {
+    cleanupAttempt();
+    setIsLoading(false);
+  };
+
+  const markFailure = (message: string) => {
+    cleanupAttempt();
+    setIsLoading(false);
+    setErrorMessage(message);
+  };
+
+  useEffect(() => {
+    return () => {
+      cleanupAttempt();
+    };
+  }, []);
+
+  if (!trimmedLink || !validation.isValid) {
     return null;
   }
 
-  const handleLinkClick = async () => {
+  const handleLinkClick = () => {
+    cleanupAttempt();
     setErrorMessage(null);
     setIsLoading(true);
+    const linkToOpen = trimmedLink;
 
     try {
-      // URI 스킴인 경우 현재 페이지에서 직접 시도
-      if (validation.type === 'uri-scheme') {
-        // 타이머로 앱 열기 실패 감지
-        const timeoutId = setTimeout(() => {
-          setErrorMessage("Couldn't open the app. It may not be installed on this device, or an invalid URI scheme was used.");
-          setIsLoading(false);
-        }, 2000);
-
-        // 페이지 포커스 변화로 성공 감지
+      if (validation.type === "uri-scheme") {
         const handleVisibilityChange = () => {
           if (document.hidden) {
-            clearTimeout(timeoutId);
-            setIsLoading(false);
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            markSuccess();
           }
         };
 
-        const handleBlur = () => {
-          clearTimeout(timeoutId);
-          setIsLoading(false);
-          window.removeEventListener('blur', handleBlur);
-          document.removeEventListener('visibilitychange', handleVisibilityChange);
+        const handleWindowBlur = () => {
+          markSuccess();
         };
 
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        window.addEventListener('blur', handleBlur);
+        listenersRef.current = {
+          handleVisibilityChange,
+          handleWindowBlur,
+        };
 
-        // 현재 창에서 URI 스킴 시도
-        window.location.href = link;
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        window.addEventListener("blur", handleWindowBlur);
+
+        timeoutRef.current = window.setTimeout(() => {
+          markFailure(
+            "Couldn't open the app. It may not be installed on this device, or an invalid URI scheme was used."
+          );
+        }, 2000);
+
+        window.location.href = linkToOpen;
       } else {
-        // Universal link나 일반 링크는 새 창에서 열기
-        window.open(link, '_blank');
+        window.open(linkToOpen, "_blank", "noopener,noreferrer");
         setIsLoading(false);
       }
     } catch (error) {
-      setErrorMessage("Failed to open the link.");
-      setIsLoading(false);
+      markFailure("Failed to open the link.");
     }
   };
 
