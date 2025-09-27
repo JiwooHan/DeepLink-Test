@@ -45,9 +45,12 @@ jobs:
         for css_file in build/assets/css/*.css; do
           if [ -f "$css_file" ]; then
             echo "Processing $css_file"
-            # Remove dark mode styles
-            sed -i 's/\.dark\\:[^{]*{[^}]*}//g' "$css_file"
-            sed -i 's/:is(\.dark[^)]*)[^{]*{[^}]*}//g' "$css_file"
+            # Remove .dark class CSS variable redefinitions
+            sed -i -E 's/\.dark\{[^}]*\}//g' "$css_file"
+            # Remove dark: utility classes
+            sed -i -E 's/\.dark\\:[^{]*\{[^}]*\}//g' "$css_file"
+            # Remove :is(.dark *) selectors
+            sed -i -E 's/[^{]*:is\(\.dark[^)]*\)[^{]*\{[^}]*\}//g' "$css_file"
             echo "Dark mode removed from $css_file"
           fi
         done
