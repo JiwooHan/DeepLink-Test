@@ -39,6 +39,19 @@ jobs:
         echo "Build completed successfully"
         ls -la build/
 
+    - name: Remove dark mode from built CSS
+      run: |
+        echo "Removing dark mode styles from CSS..."
+        for css_file in build/assets/css/*.css; do
+          if [ -f "$css_file" ]; then
+            echo "Processing $css_file"
+            # Remove dark mode styles
+            sed -i 's/\.dark\\:[^{]*{[^}]*}//g' "$css_file"
+            sed -i 's/:is(\.dark[^)]*)[^{]*{[^}]*}//g' "$css_file"
+            echo "Dark mode removed from $css_file"
+          fi
+        done
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
 
