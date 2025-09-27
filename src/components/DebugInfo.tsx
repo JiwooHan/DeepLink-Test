@@ -12,23 +12,53 @@ interface DebugInfoProps {
 
 // 플랫폼 감지 함수
 function detectPlatform(): string {
-  const userAgent = navigator.userAgent.toLowerCase();
-
-  if (/iphone|ipod/.test(userAgent)) {
-    return 'iPhone';
-  } else if (/ipad/.test(userAgent)) {
-    return 'iPad';
-  } else if (/android/.test(userAgent)) {
-    return 'Android';
-  } else if (/macintosh|mac os x/.test(userAgent)) {
-    return 'macOS';
-  } else if (/windows/.test(userAgent)) {
-    return 'Windows';
-  } else if (/linux/.test(userAgent)) {
-    return 'Linux';
-  } else {
-    return navigator.platform || 'Unknown';
+  if (typeof navigator === 'undefined') {
+    return 'Unknown';
   }
+
+  const navigatorWithUA = navigator as Navigator & {
+    userAgentData?: {
+      platform?: string;
+      mobile?: boolean;
+    };
+  };
+
+  const userAgent = (navigator.userAgent || '').toLowerCase();
+  const platform = (navigator.platform || '').toLowerCase();
+  const uaDataPlatform = (navigatorWithUA.userAgentData?.platform || '').toLowerCase();
+  const uaDataMobile = Boolean(navigatorWithUA.userAgentData?.mobile);
+
+  if (/iphone|ipod/.test(userAgent) || /iphone|ipod/.test(uaDataPlatform)) {
+    return 'iPhone';
+  }
+
+  if (/ipad/.test(userAgent) || /ipad/.test(uaDataPlatform)) {
+    return 'iPad';
+  }
+
+  const androidDetected =
+    /android/.test(userAgent) ||
+    /android/.test(uaDataPlatform) ||
+    /android/.test(platform) ||
+    (platform.startsWith('linux') && (uaDataMobile || /mobile/.test(userAgent)));
+
+  if (androidDetected) {
+    return 'Android';
+  }
+
+  if (/macintosh|mac os x/.test(userAgent) || /mac/.test(platform) || /mac/.test(uaDataPlatform)) {
+    return 'macOS';
+  }
+
+  if (/windows/.test(userAgent) || /win/.test(platform) || /win/.test(uaDataPlatform)) {
+    return 'Windows';
+  }
+
+  if (/linux/.test(userAgent) || /linux/.test(platform) || /linux/.test(uaDataPlatform)) {
+    return 'Linux';
+  }
+
+  return navigator.platform || 'Unknown';
 }
 
 export function DebugInfo({ link, timestamp }: DebugInfoProps) {
