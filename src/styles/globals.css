@@ -1,3 +1,5 @@
+/* Light mode only - No dark mode support */
+/* Updated: 2024-09-27 to remove dark mode completely */
 :root {
   --font-size: 16px;
   --background: #ffffff;
