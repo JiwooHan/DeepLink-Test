@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Language Instructions
+
+**Always respond in Korean** when working with this project. All explanations, comments, and communications should be in Korean unless specifically requested otherwise.
+
 ## Development Commands
 
 **Start development server:**
