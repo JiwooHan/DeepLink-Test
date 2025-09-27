@@ -1,7 +1,7 @@
 
   {
       "name": "DeepLink Test",
-      "version": "0.1.0",
+      "version": "0.1.4",
       "private": true,
       "dependencies": {
           "@radix-ui/react-accordion": "^1.2.3",

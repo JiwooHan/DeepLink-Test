@@ -11,7 +11,7 @@ export default function App() {
       'color: #9747ff; font-size: 18px; font-weight: bold;'
     );
     console.log(
-      '%cVersion: 0.1.0',
+      '%cVersion: 0.1.4 - Platform Detection Fixed',
       'color: #666; font-size: 14px;'
     );
     console.log(
