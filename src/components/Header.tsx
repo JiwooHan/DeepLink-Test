@@ -23,6 +23,11 @@ export function Header() {
 `}
           </pre>
         </div>
+        <div className="text-center mt-2">
+          <p className="text-xs text-muted-foreground">
+            Test your deep links and universal links easily
+          </p>
+        </div>
       </div>
     </header>
   );
